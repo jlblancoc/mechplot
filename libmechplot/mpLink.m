@@ -25,10 +25,18 @@ classdef mpLink < mpRenderizable
         SimpleLineColor = [0 0 0];
         
         % Render params for "PlanarBar" (all have defaults values)
-        r;
-        R; 
+        r;  % radiuses of the holes (vector, length=2)
+        R;  % radiuses of the rounded ends of the bar (vector, length=2)
         FaceColor = [0.9 0.9 0.9]; 
         LineWidth = 1; 
+        
+        % Render params for "Disc" (all have defaults values)
+        % r;  % radiuses of the holes (vector, length=2)
+        %FaceColor  % (Shared with other renderers)
+        %LineWidth  % (Shared with other renderers)
+        RadialHoleCount = 4 % Number of "large" holes in the middle of the disc. "0" to disable.
+        RadialHolePosRatio    = 0.65;
+        RadialHoleRadiusRatio = 0.25;
     end
     
     % "Static" data: precomputed stuff
@@ -43,28 +51,24 @@ classdef mpLink < mpRenderizable
         
         % Render link:
         function draw(me, q,parent)
-            nPts = length(me.points);
-            assert(nPts==2); % For now...
             % Get the coords of all points:
             % -----------------------------
-            pts=zeros(nPts,2);
-            for i=1:nPts,
-               if (me.points(i).is_fixed)
-                   pts(i,1) = parent.q_fixed( me.points(i).fixed_x_idx );
-                   pts(i,2) = parent.q_fixed( me.points(i).fixed_y_idx );
-               else
-                   pts(i,1) = q( me.points(i).x_idx );
-                   pts(i,2) = q( me.points(i).y_idx );
-               end
-            end
+            pts = getAllPointsCoords(me,q,parent);
+            nPts = size(pts,1);
             
             % Draw them: (TODO) simplex, lines, custom shapes, etc.
             % 
             switch (me.render_style) 
+                % Render: SimpleLine 
+                % ---------------------------------
                 case mpLinkRenderStyle.SimpleLine
+                    assert(nPts==2); % For now...
                     plot([pts(1,1) pts(2,1)], [pts(1,2) pts(2,2)],'Color',me.SimpleLineColor,'LineWidth',me.LineWidth);
                     
+                % Render: PlanarBar 
+                % ---------------------------------
                 case mpLinkRenderStyle.PlanarBar
+                    assert(nPts==2); % For now...
                     % Render parameters:
                     r_ = mpi_get_param(me.r, parent.problemMaxDim*0.01* ones(2,1));
                     R_ = mpi_get_param(me.R, parent.problemMaxDim*0.03* ones(2,1));
@@ -82,12 +86,68 @@ classdef mpLink < mpRenderizable
                             'Curvature',[1 1],  'FaceColor',[1 1 1],...
                             'EdgeColor',[0 0 0],  'LineWidth',me.LineWidth );
                     end
+
+                % Render: Disc 
+                % ---------------------------------
+                case mpLinkRenderStyle.Disc
+                    assert(nPts>=2);
+                    r_ = mpi_get_param(me.r, parent.problemMaxDim*0.01* ones(2,1));
+
+                    ang = atan2(pts(2,2)-pts(1,2),pts(2,1)-pts(1,1));
+                    DiscKinematicRadius = hypot(pts(2,2)-pts(1,2),pts(2,1)-pts(1,1));
+                    DiscInnerRadius = DiscKinematicRadius - r_(2)*1.9;
+                    DiscRadius = DiscKinematicRadius + r_(2)*1.9;
+                    
+                    % Draw disc circle: 
+                    rectangle('Position',[pts(1,1)-DiscRadius pts(1,2)-DiscRadius 2*DiscRadius 2*DiscRadius],...
+                        'Curvature',[1 1],  'FaceColor',me.FaceColor,...
+                        'EdgeColor',[0 0 0],  'LineWidth',me.LineWidth );
+
+                    % Draw "big holes":
+                    if (me.RadialHoleCount>0)
+                        holeAngs = linspace(0,2*pi,me.RadialHoleCount+1);
+                        holeRadiusToCenter = me.RadialHolePosRatio * DiscInnerRadius;
+                        holeRadius = me.RadialHoleRadiusRatio * DiscInnerRadius;
+                        for i=1:me.RadialHoleCount,
+                           th = ang+holeAngs(i);
+                           cx = pts(1,1) + cos(th)*holeRadiusToCenter;
+                           cy = pts(1,2) + sin(th)*holeRadiusToCenter;
+                           rectangle('Position',[cx-holeRadius cy-holeRadius holeRadius*[2 2]],...
+                                'Curvature',[1 1],  'FaceColor',[1 1 1],...
+                                'EdgeColor',[0 0 0],  'LineWidth',me.LineWidth );
+                        end
+                    end
+                    
+                    % Draw "pin" points
+                    for k=1:2,
+                        rectangle('Position',[pts(k,1)-r_(k) pts(k,2)-r_(k) 2*r_(k) 2*r_(k)],...
+                            'Curvature',[1 1],  'FaceColor',[1 1 1],...
+                            'EdgeColor',[0 0 0],  'LineWidth',me.LineWidth );
+                    end
+                    
                     
                 otherwise
                     error('Unknown render style for link: "%s"',char(me.render_style));
             end
             
-        end
+        end % End of function draw()
+        
+        % Returns the current coordinates of all the points defined in the
+        % link, as a Nx2 matrix with N the number of points.
+        function [pts] = getAllPointsCoords(me,q,parent)
+            nPts = length(me.points);
+            pts=zeros(nPts,2);
+            for i=1:nPts,
+               if (me.points(i).is_fixed)
+                   pts(i,1) = parent.q_fixed( me.points(i).fixed_x_idx );
+                   pts(i,2) = parent.q_fixed( me.points(i).fixed_y_idx );
+               else
+                   pts(i,1) = q( me.points(i).x_idx );
+                   pts(i,2) = q( me.points(i).y_idx );
+               end
+            end
+        end % of getAllPointsCoords()
+        
     end
     
 end

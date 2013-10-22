@@ -70,7 +70,7 @@ classdef mpPinnedGround < mpRenderizable
                 [xs, ys]=mpi_transform_shape([],[], [-grounWidth_half +grounWidth_half],[-L_ -L_], x,y,me.orientation-pi/2);
                 plot(xs,ys,'k','LineWidth',me.grounLineLineWidth);
             end
-            if (me.groundHatchLineWidth)
+            if (me.drawGroundHatch)
                 N = 8;
                 xs=[];ys=[];
                 xps=linspace(-grounWidth_half,grounWidth_half,N);

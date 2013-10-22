@@ -3,7 +3,8 @@ classdef mpLinkRenderStyle
 
     enumeration
       SimpleLine,
-      PlanarBar
+      PlanarBar,
+      Disc
     end
     
     
