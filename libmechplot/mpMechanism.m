@@ -20,6 +20,10 @@ classdef mpMechanism  < handle
         draw_options;
     end
     
+    properties(GetAccess=public, SetAccess=private)
+       problemMaxDim; 
+    end
+    
     %% Public methods:
     methods(Access=public)
         % Add a new object (link, ground, etc.) to the mechanism.
@@ -28,33 +32,60 @@ classdef mpMechanism  < handle
         end
         
         % Reset this object to an empty state
-        function clear(obj)
-            obj.objects = {};
-            obj.q_fixed = [];
-            obj.draw_options = struct();                        
+        function clear(me)
+            me.objects = {};
+            me.q_fixed = [];
+            me.draw_options = struct();                        
+            me.problemMaxDim=1.0;
         end
 
         %% ==== RENDER ===
         % Renders the mechanical structure into the current figure, 
         % given some "q" coordinates.
-        function plot(obj, q)
+        function plot(me, q)
+            me.updateLargestProblemDimension(q);
+            
             % Prepare drawing figure:
             set(gcf,'DoubleBuffer','on'); 
             clf;
             hold on;
+            
+            % Sort by ascending "z_order" property:
+            nObjs = length(me.objects);
+            zs=zeros(nObjs,1);
+            for i=1:nObjs, zs(i)=me.objects{i}.z_order;end
+            [zs, idxs]=sort(zs);
 
             % Render objects:
-            nObjs = length(obj.objects);
             for i=1:nObjs,
-                obj.objects{i}.draw(q,obj);
+                me.objects{idxs(i)}.draw(q,me);
             end
 
-            % Finish drawing figure:
+            %% Finish drawing figure:
+            % Leave a larger margin:
             axis equal;
+            a=axis; 
+            cx=0.5*(a(2)+a(1));
+            cy=0.5*(a(4)+a(3));
+            W=a(2)-a(1);
+            H=a(4)-a(3);
+            extraMarginFactor = 1.10;
+            W=W*extraMarginFactor; H=H*extraMarginFactor;
+            axis([cx-0.5*W cx+0.5*W cy-0.5*H cy+0.5*H]);
+            
+            % Update window:            
             drawnow expose update;
             
-        end
+        end % end of plot
         %% End of render
+        
+
+    end
+    
+    methods(Access=private)
+        function updateLargestProblemDimension(me,q)
+            me.problemMaxDim = max([me.q_fixed(:); q(:)])-min([me.q_fixed(:);q(:)]);
+        end
     end
     
 end

@@ -17,7 +17,7 @@ function [  ] = mp_plot_4bars( q, q_fixed, varargin )
     s.add(b);
 
     % LINK #3
-    b = mpLink('id',3);
+    b = mpLink('id',3,'R',[0.25 0.15],'z_order',-2); %,'FaceColor',[0.7 0.7 0.7],'LineWidth',2);
     b.points(end+1) = mpPoint('is_fixed',0, 'x_idx',1, 'y_idx',2);
     b.points(end+1) = mpPoint('is_fixed',0, 'x_idx',3, 'y_idx',4);
     s.add(b);
@@ -27,6 +27,8 @@ function [  ] = mp_plot_4bars( q, q_fixed, varargin )
     b.points(end+1) = mpPoint('is_fixed',0, 'x_idx',3, 'y_idx',4);
     b.points(end+1) = mpPoint('is_fixed',1, 'fixed_x_idx',3, 'fixed_y_idx',4);
     s.add(b);
+
+
     
     % Set fixed points:
     s.q_fixed = q_fixed;
