@@ -21,11 +21,14 @@ classdef mpLink < mpRenderizable
         points = mpPoint.empty; % The list of 2+ points that define the link.
         render_style = mpLinkRenderStyle.PlanarBar;
         
+        % Render params for "SimpleLine"
+        SimpleLineColor = [0 0 0];
+        
         % Render params for "PlanarBar" (all have defaults values)
         r;
         R; 
-        FaceColor; 
-        LineWidth; 
+        FaceColor = [0.9 0.9 0.9]; 
+        LineWidth = 1; 
     end
     
     % "Static" data: precomputed stuff
@@ -59,27 +62,25 @@ classdef mpLink < mpRenderizable
             % 
             switch (me.render_style) 
                 case mpLinkRenderStyle.SimpleLine
-                    plot([pts(1,1) pts(2,1)], [pts(1,2) pts(2,2)],'Color',[0 0 0],'LineWidth',3);
+                    plot([pts(1,1) pts(2,1)], [pts(1,2) pts(2,2)],'Color',me.SimpleLineColor,'LineWidth',me.LineWidth);
                     
                 case mpLinkRenderStyle.PlanarBar
                     % Render parameters:
-                    if (isempty(me.r)), r=parent.problemMaxDim*0.01* ones(2,1); else r=me.r; end;
-                    if (isempty(me.R)), R=parent.problemMaxDim*0.03* ones(2,1); else R=me.R; end;
-                    if (isempty(me.FaceColor)), col=[0.9 0.9 0.9]; else col=me.FaceColor; end;
-                    if (isempty(me.LineWidth)), lw=1; else lw=me.LineWidth; end;
+                    r_ = mpi_get_param(me.r, parent.problemMaxDim*0.01* ones(2,1));
+                    R_ = mpi_get_param(me.R, parent.problemMaxDim*0.03* ones(2,1));
 
                     % Draw nice, rounded filled bar:
                     ang = atan2(pts(2,2)-pts(1,2),pts(2,1)-pts(1,1));
                     xs=[]; ys=[]; % Build shape array incrementally
-                    [xs, ys]=mpi_transform_shape(xs,ys, mpLink.COSs*R(1),mpLink.SINs*R(1), pts(1,1),pts(1,2),ang+pi/2);
-                    [xs, ys]=mpi_transform_shape(xs,ys, mpLink.COSs*R(2),mpLink.SINs*R(2), pts(2,1),pts(2,2),ang-pi/2);
-                    hF=fill(xs,ys,col,'LineWidth',lw);
+                    [xs, ys]=mpi_transform_shape(xs,ys, mpLink.COSs*R_(1),mpLink.SINs*R_(1), pts(1,1),pts(1,2),ang+pi/2);
+                    [xs, ys]=mpi_transform_shape(xs,ys, mpLink.COSs*R_(2),mpLink.SINs*R_(2), pts(2,1),pts(2,2),ang-pi/2);
+                    fill(xs,ys,me.FaceColor,'LineWidth',me.LineWidth);
                     
                     % Draw "pin" points
                     for k=1:2,
-                        rectangle('Position',[pts(k,1)-r(k) pts(k,2)-r(k) 2*r(k) 2*r(k)],...
+                        rectangle('Position',[pts(k,1)-r_(k) pts(k,2)-r_(k) 2*r_(k) 2*r_(k)],...
                             'Curvature',[1 1],  'FaceColor',[1 1 1],...
-                            'EdgeColor',[0 0 0],  'LineWidth',lw );
+                            'EdgeColor',[0 0 0],  'LineWidth',me.LineWidth );
                     end
                     
                 otherwise

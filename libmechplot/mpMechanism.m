@@ -49,12 +49,13 @@ classdef mpMechanism  < handle
             set(gcf,'DoubleBuffer','on'); 
             clf;
             hold on;
+            box on;
             
             % Sort by ascending "z_order" property:
             nObjs = length(me.objects);
             zs=zeros(nObjs,1);
             for i=1:nObjs, zs(i)=me.objects{i}.z_order;end
-            [zs, idxs]=sort(zs);
+            [~, idxs]=sort(zs);
 
             % Render objects:
             for i=1:nObjs,
