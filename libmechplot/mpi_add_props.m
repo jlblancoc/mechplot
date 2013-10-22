@@ -4,7 +4,7 @@ function [ s ] = mpi_add_props( s, varargin )
 %
 % Mechplot (C) 2013 Jose Luis Blanco - University of Almeria
 % License: GNU GPL 3. Docs online: https://github.com/jlblancoc/mechplot
-assert( mod(length(varargin),2)==0 );
+assert( mod(length(varargin),2)==0, 'ERROR: Each parameter name must be followed by a value!: "%s"',varargin{:});
 
 for i = 1 : 2 : length(varargin)
     s = setfield(s, varargin{i},varargin{i+1});
