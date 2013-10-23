@@ -1,4 +1,4 @@
-function [  ] = mp_plot_slider_crank( q, q_fixed, varargin )
+function [ varargout ]  = mp_plot_slider_crank( q, q_fixed, varargin )
 %MP_PLOT_SLIDER_CRANK Wrapper for Mechplot that renders a slider crank
 % * "q" is expected to hold the Cartessian coordinates: [x1 y1 x2 y2]
 % * "q_fixed" holds the Cartessian coordinates of the fixed or "ground" point 
@@ -7,10 +7,16 @@ function [  ] = mp_plot_slider_crank( q, q_fixed, varargin )
 % * Optionally, you can add 7 cells, each with extra properties for 
 % bars 1 and 2, the slider block, the fixed guide bar, and ground points A, B and C. 
 %
+% As an optional output of the function, you can get the assembled
+% mpMechanism object, which can be used to refresh the plot with new "q"
+% values.
+%
 % Example:
 %   q       = [1.5 2  5 1]; % (x1 y1 x2 y2): vector of Cartesian coordinates
 %   q_fixed = [0 0  3 -1  8 4]; % (xa ya xb yb xc yc): coordinates of fixed points
-%   mp_plot_slider_crank(q, q_fixed);
+%   s=mp_plot_slider_crank(q, q_fixed);
+%   q2=[1.4 2.1  4.9 0.9];
+%   s.plot(q2);
 % 
 % Mechplot (C) 2013 Jose Luis Blanco - University of Almeria
 % License: GNU GPL 3. Docs online: https://github.com/jlblancoc/mechplot
@@ -67,4 +73,8 @@ function [  ] = mp_plot_slider_crank( q, q_fixed, varargin )
     % Set fixed points:
     s.q_fixed = q_fixed;
     s.plot(q);
+
+    if (nargout>=1)
+        varargout{1} = s;
+    end
 end

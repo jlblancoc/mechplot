@@ -1,4 +1,4 @@
-function [  ] = mp_plot_4bars( q, q_fixed, varargin )
+function [ varargout ] = mp_plot_4bars( q, q_fixed, varargin )
 %MP_PLOT_4BARS Wrapper for Mechplot that renders a planar 4 bars linkage
 % * "q" is expected to hold the Cartessian coordinates: [x1 y1 x2 y2]
 % * "q_fixed" holds the Cartessian coordinates of the fixed or "ground" points 
@@ -6,8 +6,15 @@ function [  ] = mp_plot_4bars( q, q_fixed, varargin )
 % * Optionally, you can add 5 cells, each with extra properties for 
 % bars 1,2,3 and ground points 1 and 2. 
 %
+% As an optional output of the function, you can get the assembled
+% mpMechanism object, which can be used to refresh the plot with new "q"
+% values.
+%
 % Examples:
 %  mp_plot_4bars([1 1 2 1.4],[0 0 4 0]);
+%
+%  s=mp_plot_4bars(q1,[0 0 4 0]);
+%  s.plot(q2);
 %
 %  mp_plot_4bars([0.8 0.6 2 0.8],[0 0 1 -0.2], ...
 %    {'FaceColor',[0.8 0.8 0.8]}, {'R',[0.25 0.15],'z_order',-2},...
@@ -60,5 +67,8 @@ function [  ] = mp_plot_4bars( q, q_fixed, varargin )
     
     s.plot(q);
     
+    if (nargout>=1)
+        varargout{1} = s;
+    end
 end
 

@@ -1,10 +1,14 @@
-function [  ] = mp_plot_5bars( q, q_fixed, varargin )
+function [ varargout ]  = mp_plot_5bars( q, q_fixed, varargin )
 %MP_PLOT_5BARS Wrapper for Mechplot that renders a planar 5 bars linkage
 % * "q" is expected to hold the Cartessian coordinates: [x1 y1 x2 y2 x3 y3]
 % * "q_fixed" holds the Cartessian coordinates of the fixed or "ground" points 
 %   A and B: [x_a y_a x_b y_b]
 % * Optionally, you can add 6 cells, each with extra properties for 
 % bars 1,2,3,4 and ground points 1 and 2. 
+%
+% As an optional output of the function, you can get the assembled
+% mpMechanism object, which can be used to refresh the plot with new "q"
+% values.
 %
 % Example:
 %  mp_plot_5bars([1 1 2 -0.8 3 1.4],[0 0 4 0],...
@@ -58,5 +62,9 @@ function [  ] = mp_plot_5bars( q, q_fixed, varargin )
     s.q_fixed = q_fixed;
     
     s.plot(q);    
+
+    if (nargout>=1)
+        varargout{1} = s;
+    end    
 end
 
