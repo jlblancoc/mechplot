@@ -64,3 +64,27 @@ Examples:
 
 ![mp_plot_5bars_demo1](https://raw.github.com/jlblancoc/mechplot/master/doc/mp_plot_5bars_demo1.png)
 
+
+* Slider-crank mechanisms: 
+
+        q       = [1.5 2  5 1]; % (x1 y1 x2 y2): vector of Cartesian coordinates
+        q_fixed = [0 0  3 -1  8 4]; % (xa ya xb yb xc yc): coordinates of fixed points
+        mp_plot_slider_crank(q, q_fixed);
+
+![mp_plot_slider_crank_demo1](https://raw.github.com/jlblancoc/mechplot/master/doc/mp_plot_slider_crank_demo1.png)
+
+
+        q       = [0 -2  -5 -3]; % (x1 y1 x2 y2): vector of Cartesian coordinates
+        q_fixed = [0 0  0 -3  -9 -3]; % (xa ya xb yb xc yc): coordinates of fixed points
+        mp_plot_slider_crank(q, q_fixed,...
+          {'render_style',mpLinkRenderStyle.Disc},...    % Params for bar1 
+          {'R',[0.15 0.15]},...              % Params for bar2
+          { },...                            % Params for slider block 
+          { },...                            % Params for guide bar 
+          {'drawGroundHatch',0},...          % Params for ground A
+          {}, ...                            % Params for ground B
+          {} ...                             % Params for ground C
+          );            
+
+![mp_plot_slider_crank_demo2](https://raw.github.com/jlblancoc/mechplot/master/doc/mp_plot_slider_crank_demo2.png)
+

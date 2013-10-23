@@ -47,7 +47,7 @@ classdef mpFixedGround < mpRenderizable
 
             % Erase background first:
             if (~me.transparent)
-                [xs, ys]=mpi_transform_shape([],[], [-L2_ 2*grounWidth_half 2*grounWidth_half -L2_]',[-L2_,-L2_,0,0]',x,y,me.orientation-pi/2);
+                [xs, ys]=mpi_transform_shape([],[], [-grounWidth_half-L2_, grounWidth_half, grounWidth_half,-grounWidth_half-L2_]',[-L2_,-L2_,0,0]',x,y,me.orientation-pi/2);
                 fill(xs,ys,[1 1 1],'EdgeColor',[1 1 1]);
             end
 
