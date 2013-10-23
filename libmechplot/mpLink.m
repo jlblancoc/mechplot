@@ -58,8 +58,7 @@ classdef mpLink < mpRenderizable
             pts = getAllPointsCoords(me,q,parent);
             nPts = size(pts,1);
             
-            % Draw them: (TODO) simplex, lines, custom shapes, etc.
-            % 
+            % Draw them:
             switch (me.render_style) 
                 % Render: SimpleLine 
                 % ---------------------------------
@@ -147,13 +146,7 @@ classdef mpLink < mpRenderizable
             nPts = length(me.points);
             pts=zeros(nPts,2);
             for i=1:nPts,
-               if (me.points(i).is_fixed)
-                   pts(i,1) = parent.q_fixed( me.points(i).fixed_x_idx );
-                   pts(i,2) = parent.q_fixed( me.points(i).fixed_y_idx );
-               else
-                   pts(i,1) = q( me.points(i).x_idx );
-                   pts(i,2) = q( me.points(i).y_idx );
-               end
+                pts(i,1:2)=me.points(i).getCurrentCoords(q,parent);
             end
         end % of getAllPointsCoords()
         

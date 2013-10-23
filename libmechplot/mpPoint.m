@@ -26,6 +26,16 @@ classdef mpPoint
     
     %% Methods:
     methods
+        % Get the [x,y] coordinates of the point at the given instant.
+        % "parent" is the main mpMechanism structure.
+        function [ c ] = getCurrentCoords(me,q,parent)
+           if (me.is_fixed)
+               c = [ parent.q_fixed( me.fixed_x_idx ) parent.q_fixed( me.fixed_y_idx )];
+           else
+               c = [q( me.x_idx ) q( me.y_idx )];
+           end           
+        end
+
     end
     
 end
