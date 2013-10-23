@@ -47,9 +47,8 @@ classdef mpFixedGround < mpRenderizable
 
             % Erase background first:
             if (~me.transparent)
-                rectangle('Position',[x-L2_, y-L2_, 2*grounWidth_half+L2_, L2_],...
-                    'Curvature',[0 0],  'FaceColor',[1 1 1],...
-                    'EdgeColor',[1 1 1],  'LineWidth',1 );
+                [xs, ys]=mpi_transform_shape([],[], [-L2_ 2*grounWidth_half 2*grounWidth_half -L2_]',[-L2_,-L2_,0,0]',x,y,me.orientation-pi/2);
+                fill(xs,ys,[1 1 1],'EdgeColor',[1 1 1]);
             end
 
             % Draw hatched ground part:

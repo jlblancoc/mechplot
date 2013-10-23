@@ -31,12 +31,14 @@ classdef mpLink < mpRenderizable
         LineWidth = 1; 
         
         % Render params for "Disc" (all have defaults values)
-        % r;  % radiuses of the holes (vector, length=2)
+        % r;  % (Shared with other renderers) radiuses of the holes (vector, length=2)
         %FaceColor  % (Shared with other renderers)
         %LineWidth  % (Shared with other renderers)
         RadialHoleCount = 4 % Number of "large" holes in the middle of the disc. "0" to disable.
         RadialHolePosRatio    = 0.65;
         RadialHoleRadiusRatio = 0.25;
+        DiscCenterPointIdx = 1; % The index in "points()" for the disc center (default=1, the first point)
+        DiscRadiusPointIdx = 2; % The index in "points()" for determining the disc radius (default=2, the second point)
     end
     
     % "Static" data: precomputed stuff
@@ -82,9 +84,11 @@ classdef mpLink < mpRenderizable
                     
                     % Draw "pin" points
                     for k=1:2,
-                        rectangle('Position',[pts(k,1)-r_(k) pts(k,2)-r_(k) 2*r_(k) 2*r_(k)],...
-                            'Curvature',[1 1],  'FaceColor',[1 1 1],...
-                            'EdgeColor',[0 0 0],  'LineWidth',me.LineWidth );
+                        if (r_(k)>0)
+                            rectangle('Position',[pts(k,1)-r_(k) pts(k,2)-r_(k) 2*r_(k) 2*r_(k)],...
+                                'Curvature',[1 1],  'FaceColor',[1 1 1],...
+                                'EdgeColor',[0 0 0],  'LineWidth',me.LineWidth );
+                        end
                     end
 
                 % Render: Disc 
@@ -92,14 +96,17 @@ classdef mpLink < mpRenderizable
                 case mpLinkRenderStyle.Disc
                     assert(nPts>=2);
                     r_ = mpi_get_param(me.r, parent.problemMaxDim*0.01* ones(2,1));
+                    
+                    idx1=me.DiscCenterPointIdx; % The index in "points()" for the disc center
+                    idx2=me.DiscRadiusPointIdx; % The index in "points()" for determining the disc radius
 
-                    ang = atan2(pts(2,2)-pts(1,2),pts(2,1)-pts(1,1));
-                    DiscKinematicRadius = hypot(pts(2,2)-pts(1,2),pts(2,1)-pts(1,1));
+                    ang = atan2(pts(idx2,2)-pts(idx1,2),pts(idx2,1)-pts(idx1,1));
+                    DiscKinematicRadius = hypot(pts(idx2,2)-pts(idx1,2),pts(idx2,1)-pts(idx1,1));
                     DiscInnerRadius = DiscKinematicRadius - r_(2)*1.9;
                     DiscRadius = DiscKinematicRadius + r_(2)*1.9;
                     
                     % Draw disc circle: 
-                    rectangle('Position',[pts(1,1)-DiscRadius pts(1,2)-DiscRadius 2*DiscRadius 2*DiscRadius],...
+                    rectangle('Position',[pts(idx1,1)-DiscRadius pts(idx1,2)-DiscRadius 2*DiscRadius 2*DiscRadius],...
                         'Curvature',[1 1],  'FaceColor',me.FaceColor,...
                         'EdgeColor',[0 0 0],  'LineWidth',me.LineWidth );
 
@@ -110,8 +117,8 @@ classdef mpLink < mpRenderizable
                         holeRadius = me.RadialHoleRadiusRatio * DiscInnerRadius;
                         for i=1:me.RadialHoleCount,
                            th = ang+holeAngs(i);
-                           cx = pts(1,1) + cos(th)*holeRadiusToCenter;
-                           cy = pts(1,2) + sin(th)*holeRadiusToCenter;
+                           cx = pts(idx1,1) + cos(th)*holeRadiusToCenter;
+                           cy = pts(idx1,2) + sin(th)*holeRadiusToCenter;
                            rectangle('Position',[cx-holeRadius cy-holeRadius holeRadius*[2 2]],...
                                 'Curvature',[1 1],  'FaceColor',[1 1 1],...
                                 'EdgeColor',[0 0 0],  'LineWidth',me.LineWidth );
@@ -120,9 +127,11 @@ classdef mpLink < mpRenderizable
                     
                     % Draw "pin" points
                     for k=1:2,
-                        rectangle('Position',[pts(k,1)-r_(k) pts(k,2)-r_(k) 2*r_(k) 2*r_(k)],...
-                            'Curvature',[1 1],  'FaceColor',[1 1 1],...
-                            'EdgeColor',[0 0 0],  'LineWidth',me.LineWidth );
+                        if (r_(k)>0)
+                            rectangle('Position',[pts(k,1)-r_(k) pts(k,2)-r_(k) 2*r_(k) 2*r_(k)],...
+                                'Curvature',[1 1],  'FaceColor',[1 1 1],...
+                                'EdgeColor',[0 0 0],  'LineWidth',me.LineWidth );
+                        end
                     end
                     
                     
