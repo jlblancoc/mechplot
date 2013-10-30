@@ -17,7 +17,9 @@ classdef mpMechanism  < handle
     properties(GetAccess=public, SetAccess=public)
         objects;
         q_fixed;
-        draw_options;
+        
+        % Plot options:
+        update_axis_limits = 1; % 0|1 (Default=1): Recalculate axis limits with each call to plot().        
     end
     
     properties(GetAccess=public, SetAccess=private)
@@ -35,7 +37,6 @@ classdef mpMechanism  < handle
         function clear(me)
             me.objects = {};
             me.q_fixed = [];
-            me.draw_options = struct();                        
             me.problemMaxDim=1.0;
         end
 
@@ -47,6 +48,10 @@ classdef mpMechanism  < handle
             
             % Prepare drawing figure:
             set(gcf,'DoubleBuffer','on'); 
+            if (me.update_axis_limits==0)
+                prev_a=axis; 
+            end
+            
             clf;
             hold on;
             box on;
@@ -64,15 +69,19 @@ classdef mpMechanism  < handle
 
             %% Finish drawing figure:
             % Leave a larger margin:
-            axis equal;
-            a=axis; 
-            cx=0.5*(a(2)+a(1));
-            cy=0.5*(a(4)+a(3));
-            W=a(2)-a(1);
-            H=a(4)-a(3);
-            extraMarginFactor = 1.10;
-            W=W*extraMarginFactor; H=H*extraMarginFactor;
-            axis([cx-0.5*W cx+0.5*W cy-0.5*H cy+0.5*H]);
+            if (me.update_axis_limits==0)
+                axis(prev_a);
+            else
+                axis equal;
+                a=axis; 
+                cx=0.5*(a(2)+a(1));
+                cy=0.5*(a(4)+a(3));
+                W=a(2)-a(1);
+                H=a(4)-a(3);
+                extraMarginFactor = 1.10;
+                W=W*extraMarginFactor; H=H*extraMarginFactor;
+                axis([cx-0.5*W cx+0.5*W cy-0.5*H cy+0.5*H]);
+            end
             
             % Update window:            
             drawnow expose update;
