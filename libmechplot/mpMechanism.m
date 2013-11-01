@@ -19,11 +19,11 @@ classdef mpMechanism  < handle
         q_fixed;
         
         % Plot options:
-        update_axis_limits = 1; % 0|1 (Default=1): Recalculate axis limits with each call to plot().        
+        keep_axis_limits = 0; % If set to 1, will leave the axis limits exactly as they were before starting to draw the structure
     end
     
     properties(GetAccess=public, SetAccess=private)
-       problemMaxDim; 
+       problemMaxDim = 0; % The largest length between two elements in the structure. Cached and only computed once upon first call to updateLargestProblemDimension()
     end
     
     %% Public methods:
@@ -37,7 +37,7 @@ classdef mpMechanism  < handle
         function clear(me)
             me.objects = {};
             me.q_fixed = [];
-            me.problemMaxDim=1.0;
+            me.problemMaxDim= 0;
         end
 
         %% ==== RENDER ===
@@ -48,11 +48,11 @@ classdef mpMechanism  < handle
             
             % Prepare drawing figure:
             set(gcf,'DoubleBuffer','on'); 
-            if (me.update_axis_limits==0)
-                prev_a=axis; 
+            if (me.keep_axis_limits)
+                old_axis = axis;
             end
-            
-            clf;
+            cla;
+            axis normal;            
             hold on;
             box on;
             
@@ -68,10 +68,10 @@ classdef mpMechanism  < handle
             end
 
             %% Finish drawing figure:
-            % Leave a larger margin:
-            if (me.update_axis_limits==0)
-                axis(prev_a);
+            if (me.keep_axis_limits)
+                axis(old_axis);
             else
+                % Leave a larger margin:            
                 axis equal;
                 a=axis; 
                 cx=0.5*(a(2)+a(1));
@@ -89,12 +89,21 @@ classdef mpMechanism  < handle
         end % end of plot
         %% End of render
         
+        % Reset the cached structure dimension, used to automatically size
+        % many elements when drawing.
+        function resetLargestProblemDimension(me)
+            me.problemMaxDim=0;
+        end
 
     end
     
     methods(Access=private)
+        % Get the cached structure dimension, used to automatically size
+        % many elements when drawing.
         function updateLargestProblemDimension(me,q)
-            me.problemMaxDim = max([me.q_fixed(:); q(:)])-min([me.q_fixed(:);q(:)]);
+            if (me.problemMaxDim==0)
+                me.problemMaxDim = max([me.q_fixed(:); q(:)])-min([me.q_fixed(:);q(:)]);
+            end
         end
     end
     

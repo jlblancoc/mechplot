@@ -29,6 +29,11 @@ classdef mpLink < mpRenderizable
         R;  % radiuses of the rounded ends of the bar (vector, length=2)
         FaceColor = [0.9 0.9 0.9]; 
         LineWidth = 1; 
+        % Optional: If >0, mechplot will use this fixed length for 2-points
+        % links (bars), instead of the line connecting the two points. Only
+        % useful for didactic purposes to illustrate a "broken" mechanism,
+        % for example.
+        bar_length = 0; 
         
         % Render params for "Disc" (all have defaults values)
         % r;  % (Shared with other renderers) radiuses of the holes (vector, length=2)
@@ -73,9 +78,15 @@ classdef mpLink < mpRenderizable
                     % Render parameters:
                     r_ = mpi_get_param(me.r, parent.problemMaxDim*0.01* ones(2,1));
                     R_ = mpi_get_param(me.R, parent.problemMaxDim*0.03* ones(2,1));
+                    ang = atan2(pts(2,2)-pts(1,2),pts(2,1)-pts(1,1));
+                    
+                    % Get the cooords of both bar end points:
+                    if (me.bar_length>0)
+                        % Truncate bar length:
+                        pts(2,:)=pts(1,:)+[cos(ang) sin(ang)]*me.bar_length;
+                    end
 
                     % Draw nice, rounded filled bar:
-                    ang = atan2(pts(2,2)-pts(1,2),pts(2,1)-pts(1,1));
                     xs=[]; ys=[]; % Build shape array incrementally
                     [xs, ys]=mpi_transform_shape(xs,ys, mpLink.COSs*R_(1),mpLink.SINs*R_(1), pts(1,1),pts(1,2),ang+pi/2);
                     [xs, ys]=mpi_transform_shape(xs,ys, mpLink.COSs*R_(2),mpLink.SINs*R_(2), pts(2,1),pts(2,2),ang-pi/2);
