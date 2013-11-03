@@ -21,6 +21,7 @@ classdef mpMechanism  < handle
         % Plot options:
         keep_axis_limits = 0; % If set to 1, will leave the axis limits exactly as they were before starting to draw the structure
         bg_color = []; % if set to an [R G B] color, will change the background of the current figure (gcf) 
+        skip_drawnow = 0; % If set to 1, will not call "drawnow" after plotting.
         
         % Options for saving animations as sequences of images:
         save_images = 0;  % Set to 1 to enable image saving (at the end of each call to .plot())
@@ -92,7 +93,9 @@ classdef mpMechanism  < handle
             end
             
             % Update window:            
-            drawnow expose update;
+            if (~me.skip_drawnow)
+                drawnow expose update;
+            end
             
             % Save images to disk?
             if (me.save_images)
