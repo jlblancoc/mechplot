@@ -22,11 +22,11 @@ Examples:
         q_fixed = [0 0 4  0 ]; % (xa ya xb yb): coordinates of fixed points
         mp_plot_4bars(q, q_fixed);
 
-![mp_plot_4bars_demo1](https://raw.github.com/jlblancoc/mechplot/master/doc/mp_plot_4bars_demo1.png)
+![mp_plot_4bars_demo1](https://raw.github.com/jlblancoc/mechplot/master/doc/imgs/mp_plot_4bars_demo1.png)
 
   Animation of the position problem for different input lever angles:
 
-![mp_plot_4bars_demo1](https://raw.github.com/jlblancoc/mechplot/master/doc/anim_position_problem_4bars.gif)
+![mp_plot_4bars_demo1](https://raw.github.com/jlblancoc/mechplot/master/doc/animations/position_problem_4bars.gif)
 
         q       = [0.8 0.6 2  0.8]; % (x1 y1 x2 y2): vector of Cartesian coordinates
         q_fixed = [0   0   1 -0.2]; % (xa ya xb yb): coordinates of fixed points
@@ -38,7 +38,7 @@ Examples:
           {} ...                             % Params for ground #2
           );
 
-![mp_plot_4bars_demo2](https://raw.github.com/jlblancoc/mechplot/master/doc/mp_plot_4bars_demo2.png)
+![mp_plot_4bars_demo2](https://raw.github.com/jlblancoc/mechplot/master/doc/imgs/mp_plot_4bars_demo2.png)
 
         q       = [1.2 0.5 2 3]; % (x1 y1 x2 y2): vector of Cartesian coordinates
         q_fixed = [0   0   4 0]; % (xa ya xb yb): coordinates of fixed points
@@ -50,7 +50,7 @@ Examples:
           {} ...                        % Params for ground #2
           );
 
-![mp_plot_4bars_demo3](https://raw.github.com/jlblancoc/mechplot/master/doc/mp_plot_4bars_demo3.png)
+![mp_plot_4bars_demo3](https://raw.github.com/jlblancoc/mechplot/master/doc/imgs/mp_plot_4bars_demo3.png)
 
 
 * Five bar linkages: 
@@ -66,7 +66,7 @@ Examples:
           {'orientation',pi} ...   % Params for ground #2
           );
 
-![mp_plot_5bars_demo1](https://raw.github.com/jlblancoc/mechplot/master/doc/mp_plot_5bars_demo1.png)
+![mp_plot_5bars_demo1](https://raw.github.com/jlblancoc/mechplot/master/doc/imgs/mp_plot_5bars_demo1.png)
 
 
 * Slider-crank mechanisms: 
@@ -75,7 +75,7 @@ Examples:
         q_fixed = [0 0  3 -1  8 4]; % (xa ya xb yb xc yc): coordinates of fixed points
         mp_plot_slider_crank(q, q_fixed);
 
-![mp_plot_slider_crank_demo1](https://raw.github.com/jlblancoc/mechplot/master/doc/mp_plot_slider_crank_demo1.png)
+![mp_plot_slider_crank_demo1](https://raw.github.com/jlblancoc/mechplot/master/doc/imgs/mp_plot_slider_crank_demo1.png)
 
 
         q       = [0 -2  -5 -3]; % (x1 y1 x2 y2): vector of Cartesian coordinates
@@ -90,5 +90,5 @@ Examples:
           {} ...                             % Params for ground C
           );            
 
-![mp_plot_slider_crank_demo2](https://raw.github.com/jlblancoc/mechplot/master/doc/mp_plot_slider_crank_demo2.png)
+![mp_plot_slider_crank_demo2](https://raw.github.com/jlblancoc/mechplot/master/doc/imgs/mp_plot_slider_crank_demo2.png)
 
