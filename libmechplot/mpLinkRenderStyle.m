@@ -4,7 +4,9 @@ classdef mpLinkRenderStyle
     enumeration
       SimpleLine,
       PlanarBar,
-      Disc
+      Disc,
+      ExternalSpurGear,  % Spur gear (straight-cut), external teeth
+      InternalSpurGear   % Spur gear (straight-cut), internal teeth
     end
     
     
