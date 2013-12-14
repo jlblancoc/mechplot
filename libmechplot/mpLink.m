@@ -202,6 +202,7 @@ classdef mpLink < mpRenderizable
                         if (me.render_style==mpLinkRenderStyle.InternalSpurGear)
                             angs = linspace(0,2*pi,100);
                             me.GEAR_PROFILE_PTS=[me.GEAR_PROFILE_PTS, ...
+                                gR1*[1;0],...  % Close the inner side of the polygon 
                                 gROut_.*[cos(angs);sin(angs)] ];                            
                         end
                     end % end generate shape for first time
@@ -226,7 +227,12 @@ classdef mpLink < mpRenderizable
             end
 
             % Draw "pin" points
-            for k=1:2,
+            if (me.render_style==mpLinkRenderStyle.ExternalSpurGear || me.render_style==mpLinkRenderStyle.InternalSpurGear)
+                pinIdxs = [idx1];
+            else
+                pinIdxs = [idx1, idx2];
+            end
+            for k=pinIdxs,
                 if (r_(k)>0)
                     rectangle('Position',[pts(k,1)-r_(k) pts(k,2)-r_(k) 2*r_(k) 2*r_(k)],...
                         'Curvature',[1 1],  'FaceColor',[1 1 1],...
