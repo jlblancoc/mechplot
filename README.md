@@ -92,3 +92,6 @@ Examples:
 
 ![mp_plot_slider_crank_demo2](https://raw.github.com/jlblancoc/mechplot/master/doc/imgs/mp_plot_slider_crank_demo2.png)
 
+* Gears: 
+
+![gears_example1](https://raw.github.com/jlblancoc/mechplot/master/doc/imgs/gears_example.png)

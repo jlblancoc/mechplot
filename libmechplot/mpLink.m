@@ -170,12 +170,12 @@ classdef mpLink < mpRenderizable
                         assert(me.gearNumTeeth>=13);
                         gR = DiscKinematicRadius; % "Gear radius"
                         gRadd_ = mpi_get_param(me.gearAddendum, parent.problemMaxDim*0.01);
-                        gRded_ = mpi_get_param(me.gearAddendum, parent.problemMaxDim*0.01);
+                        gRded_ = mpi_get_param(me.gearDedendum, parent.problemMaxDim*0.01);
                         gROut_ = mpi_get_param(me.internalGearOutermostRadius, gR + 3*gRded_);
                         
                         if (me.render_style==mpLinkRenderStyle.InternalSpurGear)
-                            gR1 = gR-gRded_;  % external radius
-                            gR2 = gR+gRadd_;  % internal radius
+                            gR1 = gR-gRadd_;  % external radius
+                            gR2 = gR+gRded_;  % internal radius
                         else
                             gR1 = gR+gRadd_;  % external radius
                             gR2 = gR-gRded_;  % internal radius
