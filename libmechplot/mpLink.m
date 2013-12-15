@@ -40,6 +40,7 @@ classdef mpLink < mpRenderizable
         %FaceColor  % (Shared with other renderers)
         %LineWidth  % (Shared with other renderers)
         RadialHoleCount = 4 % Number of "large" holes in the middle of the disc. "0" to disable.
+        RadialHolesFirstAngle = 0;  % In radians
         RadialHolePosRatio    = 0.65;
         RadialHoleRadiusRatio = 0.25;
         DiscCenterPointIdx = 1; % The index in "points()" for the disc center (default=1, the first point)
@@ -213,7 +214,7 @@ classdef mpLink < mpRenderizable
 
             % Draw "big holes":
             if (me.RadialHoleCount>0 && me.render_style~=mpLinkRenderStyle.InternalSpurGear)
-                holeAngs = linspace(0,2*pi,me.RadialHoleCount+1);
+                holeAngs = linspace(0,2*pi,me.RadialHoleCount+1) + me.RadialHolesFirstAngle;
                 holeRadiusToCenter = me.RadialHolePosRatio * DiscInnerRadius;
                 holeRadius = me.RadialHoleRadiusRatio * DiscInnerRadius;
                 for i=1:me.RadialHoleCount,
