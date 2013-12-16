@@ -43,6 +43,7 @@ classdef mpLink < mpRenderizable
         RadialHolesFirstAngle = 0;  % In radians
         RadialHolePosRatio    = 0.65;
         RadialHoleRadiusRatio = 0.25;
+        DiscExtraRadiusBorder;  % Extra clearance distance from the "radius" point and the represented circumference.
         DiscCenterPointIdx = 1; % The index in "points()" for the disc center (default=1, the first point)
         DiscRadiusPointIdx = 2; % The index in "points()" for determining the disc radius (default=2, the second point)
         
@@ -147,14 +148,15 @@ classdef mpLink < mpRenderizable
         % Renders the link as a disc / gear
         function [] = drawDiscGear(me,q,parent,pts)
             r_ = mpi_get_param(me.r, parent.problemMaxDim*0.01* ones(2,1));
+            DiscExtraRadiusBorder_ = mpi_get_param(me.DiscExtraRadiusBorder, r_(2)*1.9);
 
             idx1=me.DiscCenterPointIdx; % The index in "points()" for the disc center
             idx2=me.DiscRadiusPointIdx; % The index in "points()" for determining the disc radius
 
             ang = atan2(pts(idx2,2)-pts(idx1,2),pts(idx2,1)-pts(idx1,1));
             DiscKinematicRadius = hypot(pts(idx2,2)-pts(idx1,2),pts(idx2,1)-pts(idx1,1));
-            DiscInnerRadius = DiscKinematicRadius - r_(2)*1.9;
-            DiscRadius = DiscKinematicRadius + r_(2)*1.9;
+            DiscInnerRadius = DiscKinematicRadius - DiscExtraRadiusBorder_;
+            DiscRadius = DiscKinematicRadius + DiscExtraRadiusBorder_;
 
             % Draw perimeter shape: 
             switch (me.render_style) 
